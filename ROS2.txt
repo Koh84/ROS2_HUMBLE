@@ -1,0 +1,236 @@
+
+
+
+
+sudo apt install ros-humble-turtlesim
+
+source /opt/ros/humble/setup.bash
+
+ros2 pkg list
+
+ros2 pkg executables
+
+ros2 pkg executables turtlesim
+
+ros2 run turtlesim turtlesim_node
+
+ros2 run turtlesim turtle_teleop_key
+
+ros2 node -h
+
+ros2 node list
+
+ros2 node info /turtlesim
+
+koh84@Talk2Joy:~$ ros2 topic list
+/parameter_events
+/rosout
+/turtle1/cmd_vel
+/turtle1/color_sensor
+/turtle1/pose
+koh84@Talk2Joy:~$ ros2 topic list -t
+/parameter_events [rcl_interfaces/msg/ParameterEvent]
+/rosout [rcl_interfaces/msg/Log]
+/turtle1/cmd_vel [geometry_msgs/msg/Twist]
+/turtle1/color_sensor [turtlesim/msg/Color]
+/turtle1/pose [turtlesim/msg/Pose]
+
+rqt_graph
+
+ros2 topic echo /turtle1/cmd_vel
+
+ros2 topic info /turtle1/cmd_vel
+
+ros2 topic pub --once /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.
+0, z: 1.8}}"
+
+ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_ms
+gs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y:
+0.0, z: 1.8}}"
+
+ros2 topic echo /turtle1/pose
+ 
+ros2 topic hz /turtle1/pose
+
+
+
+koh84@Talk2Joy:~$ ros2 service list
+/clear
+/kill
+/reset
+/spawn
+/teleop_turtle/describe_parameters
+/teleop_turtle/get_parameter_types
+/teleop_turtle/get_parameters
+/teleop_turtle/list_parameters
+/teleop_turtle/set_parameters
+/teleop_turtle/set_parameters_atomically
+/turtle1/set_pen
+/turtle1/teleport_absolute
+/turtle1/teleport_relative
+/turtlesim/describe_parameters
+/turtlesim/get_parameter_types
+/turtlesim/get_parameters
+/turtlesim/list_parameters
+/turtlesim/set_parameters
+/turtlesim/set_parameters_atomically
+
+koh84@Talk2Joy:~$ ros2 service list -t
+/clear [std_srvs/srv/Empty]
+/kill [turtlesim/srv/Kill]
+/reset [std_srvs/srv/Empty]
+/spawn [turtlesim/srv/Spawn]
+/teleop_turtle/describe_parameters [rcl_interfaces/srv/DescribeParameters]
+/teleop_turtle/get_parameter_types [rcl_interfaces/srv/GetParameterTypes]
+/teleop_turtle/get_parameters [rcl_interfaces/srv/GetParameters]
+/teleop_turtle/list_parameters [rcl_interfaces/srv/ListParameters]
+/teleop_turtle/set_parameters [rcl_interfaces/srv/SetParameters]
+/teleop_turtle/set_parameters_atomically [rcl_interfaces/srv/SetParametersAtomically]
+/turtle1/set_pen [turtlesim/srv/SetPen]
+/turtle1/teleport_absolute [turtlesim/srv/TeleportAbsolute]
+/turtle1/teleport_relative [turtlesim/srv/TeleportRelative]
+/turtlesim/describe_parameters [rcl_interfaces/srv/DescribeParameters]
+/turtlesim/get_parameter_types [rcl_interfaces/srv/GetParameterTypes]
+/turtlesim/get_parameters [rcl_interfaces/srv/GetParameters]
+/turtlesim/list_parameters [rcl_interfaces/srv/ListParameters]
+/turtlesim/set_parameters [rcl_interfaces/srv/SetParameters]
+/turtlesim/set_parameters_atomically [rcl_interfaces/srv/SetParametersAtomically]
+
+
+ros2 service find std_srvs/srv/Empty
+
+koh84@Talk2Joy:~$ ros2 interface show turtlesim/srv/Spawn
+float32 x
+float32 y
+float32 theta
+string name # Optional.  A unique name will be created and returned if this is empty
+---
+string name
+
+
+ros2 service call /clear std_srvs/srv/Empty
+requester: making request: std_srvs.srv.Empty_Request()
+
+response:
+std_srvs.srv.Empty_Response()
+
+
+ros2 service call /spawn turtlesim/srv/Spawn
+requester: making request: turtlesim.srv.Spawn_Request(x=0.0, y=0.0, theta=0.0, name='')
+
+response:
+turtlesim.srv.Spawn_Response(name='turtle2')
+
+
+ ros2 param list
+/teleop_turtle:
+  qos_overrides./parameter_events.publisher.depth
+  qos_overrides./parameter_events.publisher.durability
+  qos_overrides./parameter_events.publisher.history
+  qos_overrides./parameter_events.publisher.reliability
+  scale_angular
+  scale_linear
+  use_sim_time
+/turtlesim:
+  background_b
+  background_g
+  background_r
+  qos_overrides./parameter_events.publisher.depth
+  qos_overrides./parameter_events.publisher.durability
+  qos_overrides./parameter_events.publisher.history
+  qos_overrides./parameter_events.publisher.reliability
+  use_sim_time
+koh84@Talk2Joy:~$ ros2 param get turtlesim background_g
+Integer value is: 86
+
+ros2 param set turtlesim background_g 255
+Set parameter successful
+
+ ros2 param dump turtlesim
+/turtlesim:
+  ros__parameters:
+    background_b: 255
+    background_g: 255
+    background_r: 69
+    qos_overrides:
+      /parameter_events:
+        publisher:
+          depth: 1000
+          durability: volatile
+          history: keep_last
+          reliability: reliable
+    use_sim_time: false
+	
+	
+ros2 param dump turtlesim > turtlesim.yaml
+	
+ros2 param load turtlesim turtlesim.yaml
+
+ros2 run turtlesim turtlesim_node --ros-args --params-file turtlesim.yaml
+
+ ros2 action list
+/turtle1/rotate_absolute
+koh84@Talk2Joy:~$ ros2 action list -t
+/turtle1/rotate_absolute [turtlesim/action/RotateAbsolute]
+koh84@Talk2Joy:~$ ros2 action info /turtle1/rotate_absolute
+Action: /turtle1/rotate_absolute
+Action clients: 1
+    /teleop_turtle
+Action servers: 1
+    /turtlesim
+koh84@Talk2Joy:~$ ros2 interface show turtlesim/action/RotateAbsolute
+# The desired heading in radians
+float32 theta
+---
+# The angular displacement in radians to the starting position
+float32 delta
+---
+# The remaining rotation in radians
+float32 remaining
+
+ ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute "{theta: 1.57}"
+Waiting for an action server to become available...
+Sending goal:
+     theta: 1.57
+
+Goal accepted with ID: 4b34eb5832c54c28b096fffe94c6a4a3
+
+Result:
+    delta: -1.5520000457763672
+	
+	
+	
+sudo apt install python3-colcon-common-extensions
+mkdir -p ~/ros2_ws
+koh84@Talk2Joy:~$ cd ros2_ws/
+git clone https://github.com/ros/ros_tutorials.git -b humble
+
+colcon build --symlink-install
+source install/local_setup.bash
+ros2 run turtlesim turtlesim_node
+
+
+ros2 pkg create --build-type ament_cmake --node-name my_node my_package
+colcon build --packages-select my_package
+source install/local_setup.bash
+
+ros2 run my_package my_node
+
+ros2 pkg create --build-type ament_cmake cpp_pubsub
+
+rosdep install -i --from-path src --rosdistro humble -y
+colcon build --packages-select cpp_pubsub
+
+ros2 run cpp_pubsub talker
+ros2 run cpp_pubsub listener
+ 
+ 
+ros2 pkg create --build-type ament_python py_pubsub
+
+
+rosdep install -i --from-path src --rosdistro humble -y
+colcon build --packages-select py_pubsub
+
+source install/local_setup.bash
+ros2 run py_pubsub talker
+ros2 run py_pubsub listener
